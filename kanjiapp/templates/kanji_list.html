@@ -1,0 +1,15 @@
+<h1>Kanji List</h1>
+<form method="get">
+    <input type="text" name="q" placeholder="Search kanji...">
+    <button type="submit">Search</button>
+</form>
+<a href="{% url 'kanji_create' %}">Add New Kanji</a>
+<ul>
+{% for kanji in kanji_list %}
+    <li>
+        <a href="{% url 'kanji_detail' kanji.pk %}">{{ kanji.character }}</a> - {{ kanji.english_translation }}
+    </li>
+{% empty %}
+    <li>No kanji found.</li>
+{% endfor %}
+</ul>

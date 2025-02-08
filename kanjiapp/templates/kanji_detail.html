@@ -1,0 +1,10 @@
+<h1>{{ kanji.character }}</h1>
+<p>English Translation: {{ kanji.english_translation }}</p>
+<p>Onyomi: {{ kanji.onyomi }}</p>
+<p>Kunyomi: {{ kanji.kunyomi }}</p>
+<p>Stroke Count: {{ kanji.stroke_count }}</p>
+<p>JLPT Level: {{ kanji.jlpt_level }}</p>
+<p>Example Sentence: {{ kanji.example_sentence }}</p>
+<a href="{% url 'kanji_update' kanji.pk %}">Edit</a>
+<a href="{% url 'kanji_delete' kanji.pk %}">Delete</a>
+<a href="{% url 'kanji_list' %}">Back to List</a>

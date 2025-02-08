@@ -1,0 +1,7 @@
+<h1>Delete Kanji</h1>
+<p>Are you sure you want to delete the kanji "{{ kanji.character }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirm Delete</button>
+</form>
+<a href="{% url 'kanji_detail' kanji.pk %}">Cancel</a>
