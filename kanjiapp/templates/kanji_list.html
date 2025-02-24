@@ -1,15 +1,205 @@
-<h1>Kanji List</h1>
-<form method="get">
-    <input type="text" name="q" placeholder="Search kanji...">
-    <button type="submit">Search</button>
-</form>
-<a href="{% url 'kanji_create' %}">Add New Kanji</a>
-<ul>
-{% for kanji in kanji_list %}
-    <li>
-        <a href="{% url 'kanji_detail' kanji.pk %}">{{ kanji.character }}</a> - {{ kanji.english_translation }}
-    </li>
-{% empty %}
-    <li>No kanji found.</li>
-{% endfor %}
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>japanese list</title>
+</head>
+<body>
+    <style>
+        input:focus, .search-button:focus{
+            outline: none;
+        }
+        
+        li{
+            list-style: none;
+        }
+
+        a{
+            color: #999;
+            font-size: large;
+            text-decoration: none;
+            z-index: 1111;
+        }
+        body{
+        background-color: #000000fd;
+        margin: 0;
+        padding: 0;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+        }
+        
+        .main-window{
+            width: 97%;
+            margin: 10px auto;
+            padding: 10px;
+            
+            
+        }
+        .background{
+            position: fixed;
+            z-index: 1;
+            width: 98%;
+            left: 1%;
+            margin: 0 auto;
+            border-radius: 15px;
+            height: 97vh;
+            
+            box-shadow: 0 0 0 1000px rgb(0, 0, 0);
+            overflow: hidden;
+        }
+        .header{
+            border: 1px solid rgb(87, 85, 85);
+            display: flex;
+            position: sticky;
+            top: 15px;
+            margin: 5px auto;
+            width: 100%;
+            height: 65px;
+            background-color: rgba(22, 22, 22, 0.692);
+            justify-content: space-between;
+            z-index: 1;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 10px;
+            border-radius: 27px;
+        }
+        .new-word{
+            border: 2px solid rgb(85, 85, 85);
+            background-color: rgba(75, 75, 105, 0.666);
+            padding: 5px;
+            border-radius: 20px;
+        }
+        .main-display{
+            background-color: rgba(35, 33, 48, 0.781);
+            margin: 1px auto;
+            width: 96%;
+            border-radius: 15px;
+            display: flex;  
+            padding: 5px;
+            justify-content: center;
+            z-index: 9;
+        }
+        .home-url{
+            background-color: rgba(75, 75, 105, 0.666);
+            border: 2px solid rgb(85, 85, 85);
+            border-radius: 20px;    
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+            font-size: small;
+        }
+        .search{
+            margin: 0 auto;
+            justify-content: space-between;
+            border-radius: 12px;
+            width: 25%;
+            height: 25px;
+            padding: 5px;
+            justify-content: center;
+            display: flex;
+        }
+        .search-input{
+            border: none;
+            border-radius: 10px;
+            background-color: #2e2e2e;
+            padding: 9px;
+
+            
+        }
+        .search-button{
+            background-color: #000;
+            color: #999;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .kanji-words{
+            background-color: rgba(139, 120, 120, 0.333);
+            padding: 15px;
+            margin: 0 auto;
+            width: 1100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .kanji-table-container{
+            margin: 0 auto;
+            height: 90px;
+            width: 90%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            border-radius: 10px;
+            align-items: center;
+            display: flex;
+        }
+        .db-data{
+            border-radius: 10px;
+            padding: 5px;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.26);
+        }
+        table{
+            margin: 0 auto;
+            text-align: center;
+            border-spacing: 14px;
+        }
+        
+    </style>
+    <script>
+
+    </script>
+    <div class="background"></div>
+    <div class="main-window">
+        <div class="header">
+            <a href="http://127.0.0.1:8000" class="home-url"><h1>Kanji List</h1></a>
+            <form method="get" class="search" name="search-datbase">
+                <input type="text" name="q" placeholder="Search kanji..." class="search-input">
+                <button type="submit" class="search-button">Search</button>
+            </form>
+            <div class="new-word">
+                <a href="{% url 'kanji_create' %}">Add New Kanji</a>
+            </div>
+        </div>    
+        <div class="main-display">
+            <ul class="words-display">
+                {% for kanji in kanji_list %}
+                <li class="kanji-words">
+                    <div class="kanji-table-container">
+                        <table>
+                            <tr>
+                                <th>Character</th>
+                                <th>English Translation</th>
+                                <th>Onyomi</th>
+                                <th>Kunyomi</th>
+                                <th>Stroke Count</th>
+                                <th>JLPT Level</th>
+                                <th>Example Sentence</th>
+                            </tr>
+                            <tr>
+                                <td class="db-data"><a href="{% url 'kanji_detail' kanji.pk %}">{{ kanji.character }}</a></td>
+                                <td class="db-data">{{ kanji.english_translation }}</td>
+                                <td class="db-data">{{ kanji.onyomi }}</td>
+                                <td class="db-data">{{ kanji.kunyomi }}</td>
+                                <td class="db-data">{{ kanji.stroke_count }}</td>
+                                <td class="db-data">{{ kanji.jlpt_level }}</td>
+                                <td class="db-data">{{ kanji.example_sentence }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </li>
+                {% empty %}
+                    <li>No kanji found.</li>
+                {% endfor %}
+            </ul>
+            
+        </div>
+    </div>
+    <div class="footer"><p>all rights reserved, 2025 - tomos4ki</p>
+    </div>
+</body>
+</html>
