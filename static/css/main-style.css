@@ -1,0 +1,59 @@
+/* style.css */
+/* Basic Reset */
+
+#settings-icon{
+    position: absolute;
+    cursor: pointer;
+    transition: all 0.5 ease;
+}
+
+.settings-img{
+    height: 45px;
+}
+
+
+.modal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.modal.visible{
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    width: 300px;
+    max-width: 80%;
+    transform: scale(0.7);
+    transition: transform 0.3s ease;
+}
+
+.modal.visible .modal-content {
+    transform: scale(1);
+}
+
+.close-button {
+    float: right;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Animation for Moving Icon to Center */
+.move-to-center {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001;
+    width: 60px;
+    height: 60px;
+}

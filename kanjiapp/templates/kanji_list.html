@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>japanese list</title>
+    <link rel="stylesheet" href="{% static 'css/main-style.css' %}">
+    <script src="{% static 'js/main-script.js' %}"></script>
 </head>
 <body>
+    <div class="popup-overlay" id="popup-overlay"></div>
     <style>
         input:focus, .search-button:focus{
             outline: none;
@@ -126,6 +130,91 @@
             align-items: center;
             justify-content: center;
         }
+        .popup{
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2c2a2a;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            overflow: hidden;
+            animation: fadeIn 0.5s;
+        }
+        .kanjiPopup{
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2c2a2a;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            overflow: hidden;
+            animation: fadeIn 0.5s;
+            z-index: 1111;
+        }
+        .settingsPopup{
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2c2a2a;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            overflow: hidden;
+            animation: fadeIn 0.5s;
+            z-index: 1111;
+        }
+        .kanjiPopup:target{
+            display: block;
+        }
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .fadeOut {
+            animation: fadeOut 0.5s;
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        .close-btn{
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
         
         .kanji-table-container{
             margin: 0 auto;
@@ -147,13 +236,62 @@
             margin: 0 auto;
             text-align: center;
             border-spacing: 14px;
+
+            border: #000;
         }
+        .kanji-buttons{
+            justify-content: space-between;
+        }
+        #settings-icon {
+        cursor: pointer;
+        transition: all 0.5s ease;
+        }
+        .settings-img {
+            width: 40px;
+            height: 40px;
+            /* Add other styles as needed */
+        }
+        
         
     </style>
     <script>
-
+        function openPopup() {
+            document.getElementById("popup").style.display = "block";
+            document.getElementById("popup-overlay").style.display = "block";
+            document.getElementById("popup").classList.add("fadeIn");
+            document.getElementById("popup-overlay").classList.add("fadeIn");
+        }
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            document.getElementById("kanjiPopup").style.display = "none";
+            document.getElementById("popup-overlay").style.display = "none";
+            document.getElementById("popup").classList.remove("fadeIn");
+            document.getElementById("popup-overlay").classList.remove("fadeIn");
+            document.getElementById("kanjiPopup").classList.remove("fadeIn");
+            document.getElementById("popup").classList.add("fadeOut");
+            document.getElementById("popup-overlay").classList.add("fadeOut");
+            document.getElementById("kanjiPopup").classList.add("fadeOut");
+        }
+        document.getElementById("popup-overlay").addEventListener("click", function(event) {
+            if (event.target === this) {
+                closePopup();
+            }
+        });
+        function openKanjiPopup() {
+            document.getElementById("kanjiPopup").style.display = "block";
+            document.getElementById("popup-overlay").style.display = "block";
+            document.getElementById("KanjiPopup").classList.add("fadeIn");
+            document.getElementById("popup-overlay").classList.add("fadeIn");
+        }
+        function settingsPopup() {
+            document.getElementById("kanjiPopup").style.display = "block";
+            document.getElementById("popup-overlay").style.display = "block";
+            document.getElementById("KanjiPopup").classList.add("fadeIn");
+            document.getElementById("popup-overlay").classList.add("fadeIn");
+        }
+        
     </script>
-    <div class="background"></div>
+    
     <div class="main-window">
         <div class="header">
             <a href="http://127.0.0.1:8000" class="home-url"><h1>Kanji List</h1></a>
@@ -161,11 +299,89 @@
                 <input type="text" name="q" placeholder="Search kanji..." class="search-input">
                 <button type="submit" class="search-button">Search</button>
             </form>
-            <div class="new-word">
-                <a href="{% url 'kanji_create' %}">Add New Kanji</a>
+            <div class="right-side">
+                <div class="new-word">
+                    <a href="#new" class="new-word-popup" onclick="openPopup()">Add New Sentence/Kanji</a>
+                    
+                </div>
+                
+            </div>
+            <div class="modal" id="settings-popup">
+                    <a href="#settings" id="settings-icon" onclick="settingsPopup()">
+                        
+                        <img src="{% static 'images/settings_dark_mode.png' %}" alt="settings" class="settings-img">
+                    </a>
+
+                </div>
+            
+            <div id="popup" class="popup">
+                
+                <form action="{% url 'kanji_create' %}" method="post">
+                    {% csrf_token %}
+                    <table>
+                        <tr>
+                            <th><label for="character">Character:</label></th>
+                            <th><input type="text" name="character" id="character"></th>
+                        </tr>
+                        <tr>
+                            <th><label for="english_translation">English Translation:</label></th>
+                            <th><input type="text" name="english_translation" id="english_translation"></th>
+                        </tr>
+                        <tr>
+                            <th><label for="onyomi">Onyomi:</label></th>
+                            <th><input type="text" name="onyomi" id="onyomi"></th>
+                        </tr>
+                        <tr>
+                            <th><label for="kunyomi">Kunyomi:</label></th>
+                            <th><input type="text" name="kunyomi" id="kunyomi"></th>
+                        </tr>
+                        <tr>
+                            <th><label for="stroke_count">Stroke Count:</label></th>
+                            <th><input type="number" name="stroke_count" id="stroke_count"></th>
+                        </tr>
+                        <tr>
+                            <th><label for="jlpt_level">JLPT Level:</label></th>
+                            <th><input type="number" name="jlpt_level" id="jlpt_level"></th>
+                        </tr>
+                        <tr>
+                            <th><label for="example_sentence">Example Sentence:</label></th>
+                            <th><input type="text" name="example_sentence" id="example_sentence"></th>
+                        </tr>
+                    </table><br><br>
+                    <input type="submit" value="Submit">
+                </form>
+                
+                <a href="http://127.0.0.1:8000/" class="close-btn" onclick="closePopup()">x</a>
+                
             </div>
         </div>    
         <div class="main-display">
+            <div id="settings-model" class="settingsPopup">
+                <div class="model-content">
+                    <h2>settings</h2>
+                    <table>
+                        <tr>
+                            <th>Language</th>
+                            <td>
+                                <select id="language-select">
+                                    <option value="en">English</option>
+                                    <option value="jp">Japanese</option>
+                                    <option value="tn">Tunisian arabic</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Theme</th>
+                            <td>
+                                <select id="theme-select">
+                                    <option value="light">Light</option>
+                                    <option value="dark">Dark</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
             <ul class="words-display">
                 {% for kanji in kanji_list %}
                 <li class="kanji-words">
@@ -181,7 +397,29 @@
                                 <th>Example Sentence</th>
                             </tr>
                             <tr>
-                                <td class="db-data"><a href="{% url 'kanji_detail' kanji.pk %}">{{ kanji.character }}</a></td>
+                                <td class="db-data">
+                                    <!-- <a href="{% url 'kanji_detail' kanji.pk %}">{{ kanji.character }}</a> -->
+                                     
+                                    <a href="#kanjiPopup-{{ kanji.pk }}" class="kanjiDetailPopup" onclick="openKanjiPopup()" >{{ kanji.character }}</a>
+                                    <div id="kanjiPopup-{{ kanji.pk }}" class="kanjiPopup">
+                                        <div>
+                                            <h1>{{ kanji.character }}</h1>
+                                            <p>English Translation: {{ kanji.english_translation }}</p>
+                                            <p>Onyomi: {{ kanji.onyomi }}</p>
+                                            <p>Kunyomi: {{ kanji.kunyomi }}</p>
+                                            <p>Stroke Count: {{ kanji.stroke_count }}</p>
+                                            <p>JLPT Level: {{ kanji.jlpt_level }}</p>
+                                            <p>Example Sentence: {{ kanji.example_sentence }}</p>
+                                            <div class="kanji-buttons">
+                                                    <a href="{% url 'kanji_update' kanji.pk %}" class="new-word">Edit</a>
+                                                    <a href="{% url 'kanji_delete' kanji.pk %}" class="new-word">Delete</a>
+                                                    <a href="{% url 'kanji_list' %}" class="new-word">Back to List</a>
+                                            </div>
+                                        </div>
+                                        <a href="http://127.0.0.1:8000/" class="close-btn" onclick="closeKanjiPopup()">x</a>
+                                        
+                                    </div>
+                                </td>
                                 <td class="db-data">{{ kanji.english_translation }}</td>
                                 <td class="db-data">{{ kanji.onyomi }}</td>
                                 <td class="db-data">{{ kanji.kunyomi }}</td>

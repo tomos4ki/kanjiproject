@@ -3,11 +3,15 @@ from django.shortcuts import render
 # Create your views here.
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
+
+
 from .models import Kanji
 from .forms import KanjiForm
 
+
 def kanji_list(request):
     query = request.GET.get('q')
+
     if query:
         kanji_list = Kanji.objects.filter(
             Q(character__icontains=query) | 
@@ -16,6 +20,7 @@ def kanji_list(request):
     else:
         kanji_list = Kanji.objects.all()
     return render(request, 'kanji_list.html', {'kanji_list': kanji_list})
+
 
 def kanji_detail(request, pk):
     kanji = get_object_or_404(Kanji, pk=pk)
